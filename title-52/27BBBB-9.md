@@ -1,0 +1,9 @@
+# N.J.S. 52:27BBBB-9. Resolutions issued by director deemed sufficient.
+
+11\. a. Notwithstanding the provisions of any law or regulation, including, without limitation, the "Local Bond Law," N.J.S.40A:2-1 et seq., and the "Municipal Qualified Bond Act," P.L.1979, c.38 (C.40A:3-1 et seq.), that requires the adoption of an ordinance or resolution to authorize any action of a municipality, a resolution issued by the director shall suffice in lieu of a municipal ordinance or resolution for all purposes, except for bond ordinances, in a municipality in need of stabilization and recovery.
+- b. In the case of bond ordinances in a municipality in need of stabilization and recovery, the director's resolution in lieu of such ordinances shall be published in full in a newspaper circulating in the municipality and a copy of the resolution shall be filed for public inspection with the municipal clerk of the municipality in need of stabilization and recovery. The publication of the director's resolution shall occur not less than 10 days prior to the time and place of a public hearing to be had on the resolution. The resolution shall become effective on the 45th day after the public hearing, unless:
+  - (1) the resolution is modified by the director subsequent to the meeting, in which case there shall be a second public hearing on no less than 10 days' notice; or
+  - (2) there is filed with the municipal clerk within 45 days of the hearing, a petition requesting a referendum in said municipality signed by either five percent or 10,000 of the registered voters of said municipality, whichever is lesser.
+If a petition is filed, the resolution pertaining to the bond measures issued by the director shall be submitted to the registered voters of said municipality at the next general or regular municipal election and in the same manner and form as other public questions to be voted upon by voters of a single municipality.
+
+Source: L.2016, c.4, s.11.
