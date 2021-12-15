@@ -1,0 +1,12 @@
+# N.J.S. 30:4D-7ee. Pharmacy benefits management services, information disclosure
+
+1\. a. Any contract or other arrangement entered into by a managed care organization, or by the Division of Medical Assistance and Health Services in the Department of Human Services, for the provision of pharmacy benefits management services under the Medicaid program shall require the pharmacy benefits manager to disclose to the department:
+- (1) all sources and amounts of income, payments, and financial benefits received by the pharmacy benefits manager in relation to the provision and administration of pharmacy benefits management services on behalf of the managed care organization, including, but not limited to, any pricing discounts, rebates of any kind, inflationary payments, credits, clawbacks, fees, grants, chargebacks, reimbursements, or other benefits;
+- (2) all ingredient costs and dispensing fees or similar payments made by the pharmacy benefits manager to any pharmacy in connection with the contract or other arrangement; and
+- (3) the pharmacy benefits manager's payment model for administrative fees.
+  - b. Information disclosed by a pharmacy benefits manager to the division pursuant to subsection a. of this section shall be confidential and not be subject to public disclosure under P.L.1963, c.73 (C.47:1A-1 et seq.), or P.L.2001, c.404 (C.47:1A-5 et al.). In addition to any other penalty provided by law, a person who is authorized to access information submitted by a pharmacy benefits manager to the division who knowingly discloses such information to any person or entity who is not authorized to access the information shall be guilty of a crime of the fourth degree and shall be subject to a civil penalty in an amount not to exceed $10,000. A civil penalty imposed under this subsection shall be collected by the director pursuant to the "Penalty Enforcement Law of 1999," P.L.1999, c.274 (C.2A:58-10 et seq.).
+  - c. As used in this section:
+"Pharmacy benefits manager" means a corporation, business, or other entity, or unit within a corporation, business, or other entity, that administers prescription drug benefits on behalf of a managed care organization.
+"Pharmacy benefits management services" mean the provision of any of the following services on behalf of a managed care organization: the procurement of prescription drugs at a negotiated rate for dispensation within this State; the processing of prescription drug claims; or the administration of payments related to prescription drug claims.
+
+Source: L.2021, c.257.
