@@ -1,0 +1,14 @@
+# N.J.S. 45:5AAA-7. Home improvement, elevation contractor, licensure, requirements.
+
+7\. To be eligible for licensure as a home improvement contractor or as a home elevation contractor, an applicant shall fulfill the following requirements:
+- a. be at least 18 years of age;
+- b. demonstrate completion of:
+  - (1) through submission of an attestation as prescribed by the board, an apprenticeship program registered with or approved by the United States Department of Labor, or similar program as provided by a trade school or other facility accredited by a regional or national accrediting agency recognized by the United States Department of Education, that allows for the applicant to prepare for a career in home improvement or home elevation services; or
+  - (2) at least two years of experience performing home improvement services subject to the direct oversight of a home improvement contractor or a home elevation contractor, or performing home improvement and home elevation services subject to the direct oversight of a home elevation contractor. "Direct oversight" shall not require the supervising individual to remain on-site. An application for licensure shall require the signature of the applicant, the name and address of the home improvement or home elevation business for whom the applicant worked, and an attestation, in a form as determined by the board, that the applicant, when providing contracting services, adhered to industry best practices and followed standard procedures in a safe and healthy manner. The two years of experience required in this section may be obtained by an applicant who can demonstrate to the board, in a manner and form as determined by the board, the performance of services in home improvement or home elevation:
+    - (a) under a home improvement or home elevation contractor in another state or jurisdiction of the United States with, as determined by the board, substantially equivalent requirements to the requirements in this State; or
+    - (b) through work obtained by the applicant as a home improvement or home elevation contractor in another state or jurisdiction of the United States with, as determined by the board, substantially equivalent requirements to the requirements in this State;
+- c. completion of educational requirements established pursuant to paragraph (1) of subsection b. of section 6 of P.L.2023, c.237 (C.45:5AAA-6) and passage of an examination pursuant to paragraph (2) of subsection b. of section 6 of P.L.2023, c.237 (C.45:5AAA-6);
+- d. submission of a disclosure statement, as prescribed by the board, stating whether the applicant has been convicted of any crime, which for the purposes of P.L.2023, c.237 (C.45:5AAA-1 et al.) shall mean a violation of section 8 of P.L.2023, c.237 (C.45:5AAA-8); and
+- e. payment of all applicable fees.
+
+Source: L.2023, c.237, s.7.
