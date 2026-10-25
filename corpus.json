@@ -1,0 +1,24 @@
+{
+  "corpus": "us/new-jersey/statutes",
+  "code": "NJ",
+  "name": "New Jersey Statutes",
+  "label": "New Jersey statutes",
+  "language": "en",
+  "history_from": "2021-09-22",
+  "record_to": "2026-10-25",
+  "record_note": "The official STATUTES-TEXT.zip as archived by the Internet Archive on 10 days from 2021-09-22 to 2026-10-25; commits are dated by capture, not by effective date.",
+  "in_force_trailer": "In-force",
+  "baseline_trailer": "Consolidated",
+  "has_future_branch": false,
+  "author": "the chapter law the section's source note gained (Law trailer), when exactly one",
+  "granularity": "capture date of the official file; one commit per chapter law per capture",
+  "scope": {
+    "when_absent": "the file records no case-by-case scope; a law's effective date and application are in the chapter law",
+    "default_reach": {
+      "rule": "presumption against retroactivity: statutes apply prospectively unless the Legislature clearly says otherwise",
+      "authority": "Gibbons v. Gibbons, 86 N.J. 515 (1981)",
+      "decided_here": false
+    }
+  },
+  "tool": "tools/nj.py"
+}
