@@ -1,5 +1,7 @@
 # Git for the New Jersey Statutes
 
+Part of [lexifina/global-law](https://github.com/lexifina/global-law), one git history for every country's law: this is the law of New Jersey, United States, which global-law reads at `united-states/new-jersey/statutes/`.
+
 The New Jersey Statutes, section by section, as printed in the Legislature's official plain-text file
 (`STATUTES-TEXT.zip`) on each day a copy of that file was archived, from 2021-09-22 to 2026-10-25. The
 first copy is the starting point; each later copy adds a commit for every section that changed, **credited to the
