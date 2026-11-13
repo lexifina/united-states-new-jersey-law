@@ -2,9 +2,10 @@
 
 The history records the Legislature's official `STATUTES-TEXT.zip` on ten archived
 observation dates, from 2021-09-22 to 2026-10-25. Its dates describe observations,
-not when chapter laws took effect. The current published history also includes
-later documentation and date-status overlays; reconstructing the original
-snapshots does not reproduce those later commits.
+not when chapter laws took effect. The supported reconstruction records archive
+capture days as `Observed:` and leaves legal in-force dates unresolved. The current
+published history also includes later documentation and date-status overlays;
+reconstructing the original snapshots does not reproduce those later commits.
 
 ## Source responses
 
@@ -22,8 +23,8 @@ The reader makes no network requests and rejects a checksum mismatch.
 ```powershell
 $env:NJ_SOURCE_CACHE = (Resolve-Path ./source-responses).Path
 python -X utf8 -I build/source.py verify
-python -X utf8 -I build/build.py check
-python -X utf8 -I build/build.py repo ./rebuilt
+python -X utf8 -I build/reproduce.py check
+python -X utf8 -I build/reproduce.py repo ./rebuilt
 ```
 
 `verify` checks every recorded response and exits 1 if any is missing. `check`
@@ -34,9 +35,23 @@ same checks and writes a new history; it refuses a directory with existing
 commits. Use a separate empty destination for each reconstruction.
 
 The source-response reader was added on 13 November 2026 to replace an absent
-dependency. Source availability and a full reconstruction remain to be checked
-when the original response bodies are available. No statute was changed by
-this tooling repair.
+dependency in a successor entry point. The original build/build.py and
+build/docs.py are retained unchanged as historical build records; use
+build/reproduce.py for the supported offline reconstruction. Source availability
+and a full reconstruction remain to be checked when the original response bodies
+are available. No statute was changed by this tooling repair.
+
+## Historical robots.txt record - 28 October 2026
+
+- **pub.njleg.state.nj.us** (the official file's host) and **www.njleg.state.nj.us**: not reachable from where this
+  was built (connections timed out, from a non-US address), so the live file was not used and the Archive's copies were
+  used instead. The Internet Archive's newest copy of `https://pub.njleg.state.nj.us/robots.txt` (19 January 2026) is a
+  redirect to the main site's robots.txt. The newest archived main-site copy (9 May 2026) allowed `/` for the wildcard
+  crawler group `*`, then listed the host and two sitemap URLs. No archived robots.txt exists for pub.njleg.gov.
+  Nothing disallows the statutes files.
+- **web.archive.org**: `/robots.txt` answers 404 (no rules).
+
+This is the original build's recorded account, preserved from published main; it was not independently refreshed during this tooling repair.
 
 ## Observations in the original build
 

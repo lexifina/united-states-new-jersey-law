@@ -71,8 +71,8 @@ A number the file prints twice (an act saved under a number the Revised Statutes
 From the Internet Archive's copies of `STATUTES-TEXT.zip` (the live file could not be reached from where this was
 built), read only from a local cache, checked word for word against the source file, and written with `git fast-import`,
 so the same responses give the same commits. The build is in [`build/`](build/), with the checksums of every response it
-read. [REPRODUCE.md](REPRODUCE.md) records the sources, the robots.txt check, the commands and what AI models did;
-[CHANGES.md](CHANGES.md) records how the history changes.
+read. [REPRODUCE.md](REPRODUCE.md) records source observations, the historical access record and reproduction instructions;
+[CHANGES.md](CHANGES.md) records how the history changes. The supported offline entry point is `build/reproduce.py`; the original builder files remain as historical records.
 
 Lexifina keeps the US Code and the CFR in the same form; all are part of
 [lexifina/global-law](https://github.com/lexifina/global-law). Built by [Lexifina](https://lexifina.com). For
