@@ -77,3 +77,7 @@ corrections, open an issue.
 
 New Jersey claims no copyright in its statutes. The history, commit messages, tools and documentation are © Lexifina
 under [CC BY 4.0](LICENSE.md).
+
+## Capture-date status
+
+The 713 versions observed on 8 August 2025 are recorded individually in [data/capture-day-dates.tsv](data/capture-day-dates.tsv). Each remains labelled **as captured**. The effective-date column is empty because an effective date has not been established for that version; this does not imply that the cited chapter law gives no effective date. The statutory wording and the original version commits are preserved.
