@@ -4,17 +4,6 @@ from __future__ import annotations
 
 import json
 
-ROBOTS_WWW = """User-agent: *
-Allow: /
-
-# Host
-Host: https://www.njleg.state.nj.us
-
-# Sitemaps
-Sitemap: https://www.njleg.state.nj.us/sitemaps/sitemap.xml
-Sitemap: https://www.njleg.state.nj.us/sitemaps/bills-sitemap.xml"""
-
-
 def _snap_rows(i: dict) -> str:
     rows = []
     for date, ts, original, url, stamp, updated, n, size in i["snaps"]:
@@ -105,107 +94,33 @@ under [CC BY 4.0](LICENSE.md).
 
 
 def reproduce(i: dict) -> str:
-    return f"""# How this history was made, and how to make it again
+    return """# Reproducing the New Jersey snapshots
 
-## Short version
+The official Legislature ZIP responses and their exact source URLs are pinned
+in `build/DATA-SHA256SUMS`. Supply the original response bodies in the directory
+named by NJ_SOURCE_CACHE; name each by its response SHA-256, URL SHA-256, or URL
+SHA-256 plus .gz for a gzip-compressed response. All checksums refer to
+uncompressed bytes. The reader makes no network requests.
 
-```sh
-cd build
-python -I fetch.py robots && python -I fetch.py zips   # read every source (cached; one request at a time, 5 s apart)
-sha256sum -c DATA-SHA256SUMS                           # see the note on the format below
-python -I build.py check                               # parse every capture and check it word for word
-python -I build.py repo ../../rebuilt                  # the same commits, with the same hashes
-```
+    python -X utf8 -I build/source.py verify
+    python -X utf8 -I build/build.py check
+    python -X utf8 -I build/build.py repo ./rebuilt
 
-`fetch.py` and `build.py` expect each other and `docs.py`/`tool.py` in one folder, and write their cache to `cache/`
-beside them. `DATA-SHA256SUMS` lists `sha256  URL` for each response (the cache keeps gzip-compressed copies, so check
-by decompressing each and hashing it). sha256 of that list: `{i['data_sha256']}`. The last change commit is
-`{i['last']}`.
+Verification fails when any recorded response is missing or has a wrong checksum.
+The builder compares every rendered word with the official plain-text file,
+allowing Markdown formatting and a section number's trailing period. Rebuild
+only into an empty directory; existing histories are refused. Dates are source
+observations, not effective dates. Credits come from the source's chapter-law
+notes. No model generates or corrects statutory wording during the build.
 
-## Sources
+The rich-text member's normative image content is not independently inventoried.
+The source-response reader was added on 13 November 2026; the original builder
+was authored on 28 October 2026. Later documentation and date overlays in the
+published repository are outside the original snapshot reconstruction.
 
-| What | Where | Requests |
-| --- | --- | ---: |
-| The Internet Archive's lists of its captures of the official file, at its three addresses | `http://web.archive.org/cdx/search/cdx?url=<address>&output=json` for `pub.njleg.state.nj.us/statutes/STATUTES-TEXT.zip`, its alias `pub.njleg.gov/statutes/STATUTES-TEXT.zip` and its earlier home `njleg.state.nj.us/statutes/STATUTES-TEXT.zip` | 3 |
-| Each distinct capture (by the Archive's content digest), unmodified | `http://web.archive.org/web/<timestamp>id_/<address>` | {len(i['snaps'])} |
-| robots.txt checks (see below), and one more address searched for copies (`njleg.gov/statutes/`, none) | `web.archive.org/robots.txt`, the archived robots.txt files and their capture lists | {i['requests'] - 3 - len(i['snaps'])} |
-| The live robots.txt of the official host | `https://pub.njleg.state.nj.us/robots.txt` | 0 answered (timed out) |
-
-{i['requests']} responses were received and cached in all ({i['bytes']:,} bytes of zip files), each listed in
-`build/DATA-SHA256SUMS`. The captures used:
-
-| Date seen (commit date) | Address captured | STATUTES.TXT dated | File says "updated through" | Sections | Zip bytes |
+| Date seen | Address captured | STATUTES.TXT dated | Updated through | Sections | ZIP bytes |
 | --- | --- | --- | --- | ---: | ---: |
-{_snap_rows(i)}
-
-Each zip holds `STATUTES.TXT` (plain text, used here) and `STATUTES.RTF` (the same text as rich text, not used). Two
-different files captured on one day would keep only the later one; the earliest capture of identical content is used.
-Captures whose content is identical to the one before give no commits.
-
-## robots.txt, checked 28 October 2026
-
-- **pub.njleg.state.nj.us** (the official file's host) and **www.njleg.state.nj.us**: not reachable from where this
-  was built (connections timed out, from a non-US address), so the live file was not used and the Archive's copies were
-  used instead. The Internet Archive's newest copy of `https://pub.njleg.state.nj.us/robots.txt` (19 January 2026) is a
-  redirect to the main site's robots.txt, whose newest archived copy (9 May 2026) reads:
-
-  ```
-{chr(10).join('  ' + l for l in ROBOTS_WWW.splitlines())}
-  ```
-
-  No archived robots.txt exists for pub.njleg.gov. Nothing disallows the statutes files.
-- **web.archive.org**: `/robots.txt` answers 404 (no rules).
-
-Requests went one at a time, at least 5 seconds apart, with the user agent
-`Mozilla/5.0 (compatible; Lexifina state law history; +https://lexifina.com/watch)`; 429 and 5xx answers would have
-been retried with backoff honouring Retry-After (none came). While the first fetch ran, a few one-off capture-list
-queries were sent by hand, so for about a minute two requests to web.archive.org were in flight at once. Every response
-is cached on disk and never fetched twice.
-
-## The build, step by step
-
-1. `python -I fetch.py robots`, `python -I fetch.py zips` (Python {i['python']}, standard library only).
-2. `python -I build.py repo <out>` reads each capture, splits `STATUTES.TXT` into sections at each line that starts at the
-   margin with a section number (`2A:4A-22`, `App.A:11-4`), and checks the result word for word: the words of every
-   rendered section, with the Markdown taken out, and of the lines outside sections (the file's header and the title
-   lines) must equal, in order, every word of the source file. Then it writes the history with `git fast-import`
-   (git {i['git']}): the oldest capture, then each later capture's changes in date order, then the documentation commit
-   dated {i['record_to']}.
-
-`build/build.py` has git blob `{i['blob']}`, the same file as `scripts/state-law/nj/build.py` in Lexifina's repository.
-
-## Decisions made by hand
-
-1. **Route.** The official file from the Internet Archive only, because the Legislature's hosts refused connections
-   from where this was built. The Archive holds the same file at three addresses (the one asked for, its `pub.njleg.gov`
-   alias, and its pre-2022 home on `www.njleg.state.nj.us/Statutes/`); all three were used, which takes the record back
-   from 2025 to {i['history_from']}.
-2. **Dates are capture dates**, at noon UTC, with an `In-force:` trailer carrying that date so the tools work, and every
-   message saying it is the date the file was seen, not the date the change took effect.
-3. **Credit.** A changed section is credited to a chapter law when its source note gained exactly one citation
-   (`<year>, c.<n>`, with or without `L.`/`P.L.` and special-session words) between two captures. Author
-   `"P.L.2025, c.35" <nj-2025-35@session-law.invalid>`. Otherwise no law is credited.
-4. **Splitting.** A line at the margin that repeats the number of the section just opened, before any text, is the
-   section's first line, not a new section. The last paragraph is the source note when it starts like one (`L.`,
-   `P.L.`, `amended`, `Repealed`, `Source`, `New`, ...) and cites a chapter law; otherwise it stays in the text.
-5. **Lines.** One source line per output line (the file already prints one paragraph per line; tables and forms print
-   one row per line), with runs of spaces and tabs made single. Designations (`a.`, `(1)`, `(a)`, `(i)`, `(A)`) become
-   list items, nested by the order the styles appear in the section; the act's own section number at the start of the
-   first line (`3. General definitions.`) is not a designation. Markdown characters are escaped.
-6. **Repeated numbers.** A number printed twice in one file (a few dozen, mostly older acts printed under a number the Revised Statutes also
-   use) gets `-2` on its second printing, in file order.
-7. **Sections that leave the file** keep a one-line note rather than being deleted.
-
-## What AI models did
-
-This repository was built on 28 October 2026 in **Claude Code**, Anthropic's coding tool, by the model **Claude Opus
-5.5** (model id `claude-opus-5-5`), from a brief set by the user at Lexifina: to bring US state law into git in the same
-form as the US Code history. The model wrote `build/`, `tools/nj.py` and these documents, ran the commands above, and
-chose the route when the Legislature's hosts could not be reached. **No model wrote or edited any statutory text, and no
-model is called when the history is built.** Every word comes from the Legislature's file; every date from the Internet
-Archive's capture records; every chapter-law credit from the sections' own source notes. The work has not been reviewed
-line by line by a lawyer.
-"""
+""" + _snap_rows(i) + "\n"
 
 
 CHANGES = """# Changes and updates

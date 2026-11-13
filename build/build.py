@@ -1,9 +1,10 @@
 """Builds a git history of the New Jersey Statutes from dated copies of the Legislature's official plain-text file,
 STATUTES-TEXT.zip, in the form of Lexifina's US Code and CFR histories.
 
-    python -I scripts/state-law/nj/fetch.py robots && python -I scripts/state-law/nj/fetch.py zips   # cached
-    python -I scripts/state-law/nj/build.py check            # parse every capture and check each section word for word
-    python -I scripts/state-law/nj/build.py repo <out>       # write the history with git fast-import
+    Set NJ_SOURCE_CACHE to the source-response directory first (see REPRODUCE.md).
+    python -I build/source.py verify
+    python -I build/build.py check            # parse every capture and check each section word for word
+    python -I build/build.py repo <out>       # write the history with git fast-import
 
 The New Jersey Legislature (Office of Legislative Services) rebuilds STATUTES-TEXT.zip every weekday and keeps no past
 copies. The Internet Archive has captured it on a few dates. The oldest capture is the baseline; at each later capture,
@@ -11,7 +12,7 @@ every section whose text changed is committed, dated by the capture (the day the
 the day the change took effect). A change is credited to a chapter law ("P.L.2025, c.123") when the section's source
 note gained exactly one; otherwise the commit says how many it gained, or that it gained none.
 
-Reads only the cache written by fetch.py; makes no network requests; the same cache gives the same commit hashes.
+Reads only the checksum-pinned source cache; makes no network requests; the same cache gives the same commit hashes.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-import fetch  # noqa: E402
+import source  # noqa: E402
 
 COMMITTER = ("Lexifina", "state-law@lexifina.com")
 CITE = re.compile(r"^((?:\d+[A-Z]?|App\.A):\d+[A-Z]*-\d+[A-Za-z0-9.]*?)\.?(?=\s|$)\s*(.*)$")
@@ -274,13 +275,13 @@ def laws(note: str) -> list[str]:
 def snapshots():
     """(meta, {path: Section}) for each capture, oldest first, one at a time (each capture is checked word for word
     against its source as it is read). Two different files seen on one day: the later one is that day's text."""
-    caps = fetch.captures()
+    caps = source.captures()
     keep = [r for k, r in enumerate(caps) if k + 1 == len(caps) or caps[k + 1]["timestamp"][:8] != r["timestamp"][:8]]
     for r in keep:
-        url = fetch.capture_url(r)
-        data = fetch.cached(url)
+        url = source.capture_url(r)
+        data = source.cached(url)
         if data is None:
-            sys.exit(f"not fetched yet: {url} (run fetch.py zips)")
+            sys.exit(f"source response missing: {url} (see REPRODUCE.md)")
         secs, titles, updated, stamp = read_capture(data)
         ts = r["timestamp"]
         meta = {"date": f"{ts[:4]}-{ts[4:6]}-{ts[6:8]}", "ts": ts, "url": url, "original": r["original"],
@@ -302,6 +303,11 @@ def cmd_repo(args: argparse.Namespace) -> None:
     out = Path(args.out).resolve()
     if out.exists() and any(out.iterdir()) and not (out / ".git").exists():
         sys.exit(f"{out} is not empty and is not a git repository; refusing to overwrite it")
+    if (out / ".git").exists():
+        existing = subprocess.run(["git", "rev-parse", "--verify", "HEAD"], cwd=out,
+                                  capture_output=True, timeout=30)
+        if existing.returncode == 0:
+            sys.exit("refusing to rebuild an existing history; choose a new empty scratch directory")
     # (date, kind, key) -> {"files": {path: text}, "added": [...], "changed": [...], "removed": [...], "laws": set}
     groups: dict[tuple[str, int, str], dict] = {}
 
@@ -449,9 +455,9 @@ def write(out: Path, snaps: list[dict], groups: dict) -> None:
 
     files_now = subprocess.run(["git", "ls-tree", "-r", "--name-only", "main"], cwd=out, capture_output=True, text=True).stdout.split()
     emails = subprocess.run(["git", "log", "--format=%ae", "main"], cwd=out, capture_output=True, text=True).stdout.split()
-    for url in fetch.CHECKS:
-        fetch.cached(url)   # list the robots.txt checks in the manifest too (those that answered)
-    manifest = "".join(f"{h}  {u}\n" for u, h in sorted(fetch.READ.items()))
+    for url in source.CHECKS:
+        source.cached(url)   # list the robots.txt checks in the manifest too (those that answered)
+    manifest = "".join(f"{h}  {u}\n" for u, h in sorted(source.READ.items()))
     record_to = snaps[-1]["date"]
     info = {
         "sections": len(files_now), "titles": len({f.split("/")[0] for f in files_now}),
@@ -461,7 +467,7 @@ def write(out: Path, snaps: list[dict], groups: dict) -> None:
         "unnamed_commits": sum(1 for e in emails if e.startswith("nj-unnamed")),
         "dropped_commits": sum(1 for e in emails if e.startswith("nj-dropped")),
         "snaps": [(s["date"], s["ts"], s["original"], s["url"], s["stamp"], s["updated"], s["sections"], s["bytes"]) for s in snaps],
-        "requests": len(fetch.READ), "bytes": sum(s["bytes"] for s in snaps),
+        "requests": len(source.READ), "bytes": sum(s["bytes"] for s in snaps),
         "data_sha256": hashlib.sha256(manifest.encode()).hexdigest(), "last": last, "python": sys.version.split()[0],
         "git": subprocess.run(["git", "--version"], capture_output=True, text=True).stdout.split()[-1],
         "blob": subprocess.run(["git", "hash-object", str(Path(__file__).resolve())], capture_output=True, text=True).stdout.strip(),
@@ -471,7 +477,7 @@ def write(out: Path, snaps: list[dict], groups: dict) -> None:
     docs = {
         "README.md": readme(info), "REPRODUCE.md": reproduce(info), "CHANGES.md": CHANGES, "LICENSE.md": LICENSE,
         "corpus.json": corpus(info), "tools/nj.py": (HERE / "tool.py").read_text(encoding="utf-8"),
-        "build/build.py": Path(__file__).read_text(encoding="utf-8"), "build/fetch.py": (HERE / "fetch.py").read_text(encoding="utf-8"),
+        "build/build.py": Path(__file__).read_text(encoding="utf-8"), "build/source.py": (HERE / "source.py").read_text(encoding="utf-8"),
         "build/docs.py": (HERE / "docs.py").read_text(encoding="utf-8"), "build/tool.py": (HERE / "tool.py").read_text(encoding="utf-8"),
         "build/DATA-SHA256SUMS": manifest,
     }
